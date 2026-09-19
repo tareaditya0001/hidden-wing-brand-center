@@ -1,0 +1,21 @@
+name: Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci-gate:
+    uses: ./.github/workflows/ci.yml
+
+  publish-images:
+    needs: ci-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build images
+        run: |
+          docker build -f deploy/docker/backend.Dockerfile -t hidden-wing-brand-center-api:${{ github.sha }} .
+          docker build -f deploy/docker/frontend.Dockerfile -t hidden-wing-brand-center-web:${{ github.sha }} .
+      - name: Skip deploy on CI failure
+        run: echo "Images built only after CI succeeded. Deploy credentials are not stored in this repository."

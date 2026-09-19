@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Hidden Wing">
+  <rect width="1200" height="630" fill="#12233B"/>
+  <rect x="80" y="180" width="140" height="140" rx="28" fill="#1C3353"/>
+  <path d="M108 268c22-4 36-20 44-40 8 20 22 36 44 40-18 12-36 20-44 20s-26-8-44-20z" fill="#C6A15B"/>
+  <text x="260" y="250" fill="#F4EFE6" font-family="Inter, Segoe UI, sans-serif" font-size="72" font-weight="700">Hidden Wing</text>
+  <text x="260" y="330" fill="#C6A15B" font-family="Inter, Segoe UI, sans-serif" font-size="36">Brand Center</text>
+</svg>

@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hidden_wing_brand_center
+      POSTGRES_USER: brandcenter
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-brandcenter_dev}
+    ports:
+      - "5432:5432"
+    volumes:
+      - brandcenter_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U brandcenter -d hidden_wing_brand_center"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend.Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=hidden_wing_brand_center;Username=brandcenter;Password=${POSTGRES_PASSWORD:-brandcenter_dev}
+      Database__ApplyMigrations: "true"
+      CORS__AllowedOrigins__0: http://localhost:5173
+      CORS__AllowedOrigins__1: http://localhost:8081
+      Security__JwtSecret: ${JWT_SECRET}
+      Security__AdminUsername: ${ADMIN_USERNAME}
+      Security__AdminPassword: ${ADMIN_PASSWORD}
+      Storage__BaseUrl: /uploads
+      Storage__LocalPath: /app/storage/uploads
+    ports:
+      - "5080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/docker/frontend.Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:5080
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
+
+volumes:
+  brandcenter_pg:

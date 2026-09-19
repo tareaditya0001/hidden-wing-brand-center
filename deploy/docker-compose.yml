@@ -1,0 +1,5 @@
+# Production-oriented compose file. Supply secrets through the environment.
+# Do not commit real credentials.
+
+include:
+  - ../docker-compose.yml
